@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams,useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Card, CardContent, Typography, CircularProgress, Box, ImageList, ImageListItem } from '@mui/material';
+import { Card, CardContent, Typography, CircularProgress, Box, ImageList, ImageListItem ,Button } from '@mui/material';
 
 const ClubPage = () => {
   const { clubId } = useParams();
   const [clubData, setClubData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchClubData = async () => {
@@ -23,6 +24,10 @@ const ClubPage = () => {
     };
     fetchClubData();
   }, [clubId]);
+
+  const handleEnroll = () => {
+    navigate('/enrollment', { state: { clubName: clubData?.name } });
+  };
 
   if (loading) {
     return (
@@ -56,6 +61,20 @@ const ClubPage = () => {
           <Typography variant="h3" sx={{ textAlign: 'center', mb: 3 }}>
             {clubData.name}
           </Typography>
+
+          {/* Enroll Button */}
+                  <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+                    <Button 
+                      type="submit"
+                      size="medium"
+                      variant='outlined'
+                      sx={{ backgroundColor: 'powderblue', color: 'black' }}
+                      onClick={handleEnroll}
+                    >
+                      Enroll / Register
+                    </Button>
+                  </div>
+                  <br />
 
           {/* Description */}
           <Typography variant="h6" sx={{ mb: 1 }}>
