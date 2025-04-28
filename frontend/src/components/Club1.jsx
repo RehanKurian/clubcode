@@ -8,23 +8,25 @@ import ImageListItem from '@mui/material/ImageListItem';
 import { Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; // NEW import for API calls
+import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 const Club1 = () => {
-  const [clubData, setClubData] = React.useState(null); // NEW State for club info
-  const navigate = useNavigate();
+  const { clubId } = useParams(); // getting dynamic id from URL
+  const [clubData, setClubData] = useState(null); // state to hold club data
+  const fetchClubData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3000/clubinfo/${clubId}`);
+      setClubData(response.data);
+    } catch (error) {
+      console.error('Failed to fetch club data:', error);
+    }
+  };
 
-  // Fetching club data from backend
-  React.useEffect(() => {
-    const fetchClubData = async () => {
-      try {
-        const response = await axios.get('http://localhost:3000/clubinfo/club1'); 
-        setClubData(response.data);
-      } catch (error) {
-        console.error('Failed to fetch club data:', error);
-      }
-    };
+  useEffect(() => {
     fetchClubData();
   }, []);
+
 
   const handleEnroll = () => {
     navigate('/enrollment', { state: { clubName: clubData?.name || 'Club 1' } });

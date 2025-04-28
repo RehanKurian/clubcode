@@ -26,15 +26,31 @@ async function main() {
 }
 
 //get club data
-app.get('/clubinfo/club1', async (req, res) => {
+app.get('/clubinfos/:clubId', async (req, res) => {
     try {
-      const club = await ClubModel.findOne({ name: 'Club 1' }); // Assuming name = Club 1
+      const { clubId } = req.params;
+      const club = await ClubModel.findById(clubId);
+      if (!club) {
+        return res.status(404).json({ message: 'Club not found' });
+      }
       res.json(club);
     } catch (error) {
-      res.status(500).json({ message: 'Server Error' });
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
     }
   });
   
+
+
+app.get('/clubinfos', async (req, res) => {
+    try {
+      const clubs = await ClubModel.find(); // find all clubs
+      res.json(clubs);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
 
 // enrollement form users
 app.post('/enrolls',async(req,res)=>{
